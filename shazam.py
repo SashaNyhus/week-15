@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 def search(song, page):
     url = "https://shazam.p.rapidapi.com/search"
     query_str = {"term": song, "locale": "en-US", "offset": page, "limit": "5"}
@@ -10,6 +11,7 @@ def search(song, page):
     }
     res = requests.request("GET", url, headers=headers, params=query_str)
     return json.loads(res.text)
+
 
 def get_recommendations(song_key):
     url = "https://shazam.p.rapidapi.com/songs/list-recommendations"

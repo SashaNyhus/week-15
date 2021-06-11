@@ -70,20 +70,3 @@ def make_search_results_printable(results_obj):
             " by " + obj["track"]["subtitle"])
         track_index += 1
     return array_to_print
-
-
-
-
-
-
-
-
-
-# unused loop
-# while(track_index < len(track_results)):
-#     array_to_print.append(
-#         str(track_index) + ") " +
-#         track_results[track_index]["track"]["title"] +
-#         " by " + track_results[track_index]["track"]["subtitle"]
-#     )
-#     track_index += 1
