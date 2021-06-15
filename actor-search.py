@@ -98,21 +98,27 @@ def getActorFromCharacter():
     movieResults = imdb.autoComplete(movie)
     for movieResult in movieResults["d"]:
         castList = imdb.getFullCredits(movieResult["id"])["cast"]
+        print("checking characters in ", movieResult["l"])
+        if castList is None:
+            continue
         for castMember in castList:
-            if character in castMember["characters"]:
-                year = movieResult["y"]
-                if "yr" in movieResult:
-                    year = movieResult["yr"]
-                foundIt = input(
-                    "Did you mean " + character +
-                    " played by " + castMember["name"] +
-                    " in " + movieResult["l"] +
-                    " (" + year + " " + movieResult["q"] + ")? y/n"
-                    )
-                if foundIt == "y":
-                    name = castMember["name"]
-                    key = castMember["id"].removeprefix("/name/")
-                    break
+            if "characters" not in castMember:
+                continue
+            for characterResult in castMember["characters"]:
+                if character in characterResult:
+                    year = movieResult["y"]
+                    if "yr" in movieResult:
+                        year = movieResult["yr"]
+                    foundIt = input(
+                        "Did you mean " + character +
+                        " played by " + castMember["name"] +
+                        " in " + movieResult["l"] +
+                        " (" + str(year) + " " + movieResult["q"] + ")? y/n"
+                        )
+                    if foundIt == "y":
+                        name = castMember["name"]
+                        key = castMember["id"].removeprefix("/name/")
+                        break
         if foundIt == "y":
             break
     if foundIt != "y":

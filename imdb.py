@@ -3,6 +3,7 @@ import json
 
 
 def findTitle(query):
+    print("fetching title")
     url = "https://imdb8.p.rapidapi.com/title/find"
     queryString = {"q": query}
     headers = {
@@ -14,6 +15,7 @@ def findTitle(query):
 
 
 def getKnownFor(actor, actorKey):
+    print("fetching Known For list")
     if(actorKey is None):
         actorKey = getActorKey(actor)
         if(actorKey is None):
@@ -39,6 +41,7 @@ def getActorKey(name):
 
 
 def autoComplete(query):
+    print("using autocomplete to get key")
     url = "https://imdb8.p.rapidapi.com/auto-complete"
     queryString = {"q": query}
     headers = {
@@ -50,6 +53,7 @@ def autoComplete(query):
 
 
 def getAllFilmography(key):
+    print("fetching full filmography")
     url = "https://imdb8.p.rapidapi.com/actors/get-all-filmography"
     queryString = {"nconst": key}
     headers = {
@@ -61,6 +65,7 @@ def getAllFilmography(key):
 
 
 def getFullCredits(titleKey):
+    print("fetching full credits")
     url = "https://imdb8.p.rapidapi.com/title/get-full-credits"
     queryString = {"tconst": titleKey}
     headers = {
