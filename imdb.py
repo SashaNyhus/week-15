@@ -15,11 +15,13 @@ def findTitle(query):
 
 
 def getKnownFor(actor, actorKey):
-    print("fetching Known For list")
     if(actorKey is None):
-        actorKey = getActorKey(actor)
-        if(actorKey is None):
+        actorData = getActorData(actor)
+        if(actorData is None):
             return None
+        actor = actorData["name"]
+        actorKey = actorData["key"]
+    print("fetching Known For list")
     url = "https://imdb8.p.rapidapi.com/actors/get-known-for"
     queryString = {"nconst": actorKey}
     headers = {
@@ -27,21 +29,25 @@ def getKnownFor(actor, actorKey):
         'x-rapidapi-host': "imdb8.p.rapidapi.com"
         }
     res = requests.request("GET", url, headers=headers, params=queryString)
-    return {"knownFor": json.loads(res.text), "actorKey": actorKey}
+    dataToReturn = {"knownFor": json.loads(res.text), "actorKey": actorKey, "name": actor}
+    return dataToReturn
 
 
-def getActorKey(name):
-    key = None
-    resultsObj = autoComplete(name)
+def getActorData(nameInput):
+    fetchedKey = None
+    fetchedName = None
+    resultsObj = autoComplete(nameInput)
     for result in resultsObj["d"]:
         if(result["id"][0] == "n"):
-            key = result["id"]
+            fetchedKey = result["id"]
+            fetchedName = result["l"]
             break
-    return key
+    data = {"name": fetchedName, "key": fetchedKey}
+    return data
 
 
 def autoComplete(query):
-    print("using autocomplete to get key")
+    print("using autocomplete endpoint")
     url = "https://imdb8.p.rapidapi.com/auto-complete"
     queryString = {"q": query}
     headers = {

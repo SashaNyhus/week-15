@@ -16,6 +16,7 @@ def actorSearch():
     actorKnownForData = imdb.getKnownFor(actorName, actorKey)
     knownFor = actorKnownForData["knownFor"]
     actorKey = actorKnownForData["actorKey"]
+    actorName = actorKnownForData["name"]
     if(knownFor is None):
         print("no results found")
         return
