@@ -1,9 +1,6 @@
 import shazam
 
 
-suggest_a_song()
-
-
 def suggest_a_song():
     choosing_song = True
     search_query = input("Search for a song")
@@ -67,6 +64,10 @@ def make_search_results_printable(results_obj):
         array_to_print.append(
             str(track_index) + ") " +
             obj["track"]["title"] +
-            " by " + obj["track"]["subtitle"])
+            " by " + obj["track"]["subtitle"]
+            )
         track_index += 1
     return array_to_print
+
+
+suggest_a_song()
