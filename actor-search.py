@@ -1,5 +1,6 @@
 import imdb
 
+
 def actorSearch():
     nameKnown = input("Do you know the actor's name? Type y/n")
     if(nameKnown == "y"):
@@ -7,14 +8,15 @@ def actorSearch():
         actorKey = None
     else:
         actorData = getActorFromCharacter()
-        if actorData == None:
+        if actorData is None:
+            print("sorry, we couldn't find that")
             return
         actorName = actorData["name"]
         actorKey = actorData["actorKey"]
     actorKnownForData = imdb.getKnownFor(actorName, actorKey)
     knownFor = actorKnownForData["knownFor"]
     actorKey = actorKnownForData["actorKey"]
-    if(knownFor == None):
+    if(knownFor is None):
         print("no results found")
         return
     printableKnownFor = []
@@ -22,13 +24,15 @@ def actorSearch():
         summary = result["summary"]
         role = ""
         if "characters" in summary:
-            role = (summary["category"] + "- " + ", ".join(summary["characters"]))
+            role = (
+                summary["category"] + "- " + ", ".join(summary["characters"])
+            )
         elif "category" in summary:
             role = summary["category"]
         printableKnownFor.append(
-            result["title"]["title"] + 
-            " (" + str(result["title"]["year"]) + " " + result["title"]["titleType"] + "): " +
-            role
+            result["title"]["title"] +
+            " (" + str(result["title"]["year"]) + " " +
+            result["title"]["titleType"] + "): " + role
         )
     print(actorName + " is best known for")
     print(*printableKnownFor, sep="\n")
@@ -44,25 +48,28 @@ def actorSearch():
             elif "status" in title:
                 titleStatus = title["status"]
             if "characters" in title:
-                role = (title["category"] + "- " + ", ".join(title["characters"]))
+                role = (
+                    title["category"] + "- " + ", ".join(title["characters"])
+                    )
             elif "category" in title:
                 role = title["category"]
             printableFilmography.append(
-                title["title"] + " (" + title["titleType"] + ", " + titleStatus + "): " + role
+                title["title"] +
+                " (" + title["titleType"] + ", " + titleStatus + "): " + role
             )
         keepViewing = True
         indexStart = 0
         page = 1
         while(keepViewing):
             print(actorName + " filmography, page " + str(page))
-            print("\n".join(printableFilmography[indexStart:(indexStart + 14)]))
+            print("\n".join(printableFilmography[indexStart:(indexStart + 9)]))
             doNext = input(
                 "0) end program \n"
-                "1) see next 15 results \n"
-                "2) see previous 15 results"
+                "1) see next 10 results \n"
+                "2) see previous 10 results"
             )
             if doNext == "1":
-                indexStart += 15
+                indexStart += 10
                 page += 1
                 if indexStart > (len(printableFilmography)):
                     print("end of list reached. returned to top")
@@ -71,13 +78,15 @@ def actorSearch():
                 continue
             elif doNext == "2":
                 if indexStart > 0:
-                    indexStart -=15
+                    indexStart -= 10
                     page -= 1
                 else:
                     print("already at beginning of list")
                 continue
-            else: break
+            else:
+                break
     return
+
 
 def getActorFromCharacter():
     movie = input("What's the movie (or other media)?")
@@ -94,7 +103,12 @@ def getActorFromCharacter():
                 year = movieResult["y"]
                 if "yr" in movieResult:
                     year = movieResult["yr"]
-                foundIt = input("Did you mean " + character + " played by " + castMember["name"] + " in " + movieResult["l"] + " (" + year + " " + movieResult["q"] + ")? y/n")
+                foundIt = input(
+                    "Did you mean " + character +
+                    " played by " + castMember["name"] +
+                    " in " + movieResult["l"] +
+                    " (" + year + " " + movieResult["q"] + ")? y/n"
+                    )
                 if foundIt == "y":
                     name = castMember["name"]
                     key = castMember["id"].removeprefix("/name/")
@@ -102,9 +116,9 @@ def getActorFromCharacter():
         if foundIt == "y":
             break
     if foundIt != "y":
-        print("sorry, we couldn't find that")
         return None
     actorData = {"name": name, "actorKey": key}
     return actorData
+
 
 actorSearch()

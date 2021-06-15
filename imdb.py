@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 def findTitle(query):
     url = "https://imdb8.p.rapidapi.com/title/find"
     queryString = {"q": query}
@@ -11,10 +12,11 @@ def findTitle(query):
     res = requests.request("GET", url, headers=headers, params=queryString)
     return json.loads(res.text)
 
+
 def getKnownFor(actor, actorKey):
-    if(actorKey == None):
+    if(actorKey is None):
         actorKey = getActorKey(actor)
-        if(actorKey == None):
+        if(actorKey is None):
             return None
     url = "https://imdb8.p.rapidapi.com/actors/get-known-for"
     queryString = {"nconst": actorKey}
@@ -45,6 +47,7 @@ def autoComplete(query):
         }
     res = requests.request("GET", url, headers=headers, params=queryString)
     return json.loads(res.text)
+
 
 def getAllFilmography(key):
     url = "https://imdb8.p.rapidapi.com/actors/get-all-filmography"
