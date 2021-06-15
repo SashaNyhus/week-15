@@ -4,9 +4,14 @@ def actorSearch():
     nameKnown = input("Do you know the actor's name? Type y/n")
     if(nameKnown == "y"):
         actorName = input("Type the name")
+        actorKey = None
     else:
-        actorName = getActorFromCharacter()
-    actorKnownForData = imdb.getKnownFor(actorName, None)
+        actorData = getActorFromCharacter()
+        if actorData == None:
+            return
+        actorName = actorData["name"]
+        actorKey = actorData["actorKey"]
+    actorKnownForData = imdb.getKnownFor(actorName, actorKey)
     knownFor = actorKnownForData["knownFor"]
     actorKey = actorKnownForData["actorKey"]
     if(knownFor == None):
@@ -50,23 +55,23 @@ def actorSearch():
         page = 1
         while(keepViewing):
             print(actorName + " filmography, page " + str(page))
-            print("\n".join(printableFilmography[indexStart:(indexStart + 24)]))
+            print("\n".join(printableFilmography[indexStart:(indexStart + 14)]))
             doNext = input(
                 "0) end program \n"
-                "1) see next 25 results \n"
-                "2) see previous 25 results"
+                "1) see next 15 results \n"
+                "2) see previous 15 results"
             )
-            if doNext == 1:
-                indexStart += 25
+            if doNext == "1":
+                indexStart += 15
                 page += 1
                 if indexStart > (len(printableFilmography)):
                     print("end of list reached. returned to top")
                     indexStart = 0
                     page = 1
                 continue
-            elif doNext == 2:
+            elif doNext == "2":
                 if indexStart > 0:
-                    indexStart -=25
+                    indexStart -=15
                     page -= 1
                 else:
                     print("already at beginning of list")
@@ -77,6 +82,29 @@ def actorSearch():
 def getActorFromCharacter():
     movie = input("What's the movie (or other media)?")
     character = input("What's the character's name?")
-    return
+    name = ""
+    key = ""
+    foundIt = ""
+    print("searching database - this may take a moment")
+    movieResults = imdb.autoComplete(movie)
+    for movieResult in movieResults["d"]:
+        castList = imdb.getFullCredits(movieResult["id"])["cast"]
+        for castMember in castList:
+            if character in castMember["characters"]:
+                year = movieResult["y"]
+                if "yr" in movieResult:
+                    year = movieResult["yr"]
+                foundIt = input("Did you mean " + character + " played by " + castMember["name"] + " in " + movieResult["l"] + " (" + year + " " + movieResult["q"] + ")? y/n")
+                if foundIt == "y":
+                    name = castMember["name"]
+                    key = castMember["id"].removeprefix("/name/")
+                    break
+        if foundIt == "y":
+            break
+    if foundIt != "y":
+        print("sorry, we couldn't find that")
+        return None
+    actorData = {"name": name, "actorKey": key}
+    return actorData
 
 actorSearch()

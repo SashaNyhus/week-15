@@ -55,3 +55,14 @@ def getAllFilmography(key):
         }
     res = requests.request("GET", url, headers=headers, params=queryString)
     return json.loads(res.text)
+
+
+def getFullCredits(titleKey):
+    url = "https://imdb8.p.rapidapi.com/title/get-full-credits"
+    queryString = {"tconst": titleKey}
+    headers = {
+        'x-rapidapi-key': "fa28eee3eemsh74c42be02bf9b23p141db5jsnbfb2a373758a",
+        'x-rapidapi-host': "imdb8.p.rapidapi.com"
+        }
+    res = requests.request("GET", url, headers=headers, params=queryString)
+    return json.loads(res.text)
