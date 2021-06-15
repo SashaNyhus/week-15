@@ -120,6 +120,8 @@ def getActorFromCharacter():
                         name = castMember["name"]
                         key = castMember["id"].removeprefix("/name/")
                         break
+            if foundIt == "y":
+                break
         if foundIt == "y":
             break
     if foundIt != "y":
